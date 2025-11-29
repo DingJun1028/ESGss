@@ -28,6 +28,7 @@
               'ai-pulse': 'pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               'float': 'float 6s ease-in-out infinite',
               'fade-in': 'fadeIn 0.5s ease-out forwards',
+              'spin-slow': 'spin 3s linear infinite',
             },
             keyframes: {
               blob: {
@@ -108,6 +109,16 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
+
+      /* Markdown Styles */
+      .markdown-content ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 0.5em; }
+      .markdown-content ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 0.5em; }
+      .markdown-content p { margin-bottom: 0.5em; }
+      .markdown-content strong { font-weight: 700; color: #fbbf24; }
+      .markdown-content h1, .markdown-content h2, .markdown-content h3 { font-weight: 700; margin-top: 1em; margin-bottom: 0.5em; color: #e2e8f0; }
+      .markdown-content a { color: #34d399; text-decoration: underline; }
+      .markdown-content code { background: rgba(255,255,255,0.1); padding: 0.2em 0.4em; border-radius: 0.25em; font-family: monospace; font-size: 0.9em; }
+      .markdown-content blockquote { border-left: 3px solid #8b5cf6; padding-left: 1em; color: #94a3b8; font-style: italic; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script type="importmap">
@@ -118,7 +129,10 @@
     "recharts": "https://aistudiocdn.com/recharts@^3.5.1",
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "uuid": "https://aistudiocdn.com/uuid@^13.0.0",
+    "marked": "https://aistudiocdn.com/marked@^15.0.0",
+    "html2pdf.js": "https://aistudiocdn.com/html2pdf.js@^0.10.1"
   }
 }
 </script>

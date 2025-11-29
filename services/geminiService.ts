@@ -2,6 +2,7 @@ import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 import { Language } from '../types';
 
 // Initialize the API client
+// The API key must be obtained exclusively from process.env.API_KEY
 const apiKey = process.env.API_KEY || ''; 
 let ai: GoogleGenAI | null = null;
 
@@ -9,26 +10,47 @@ if (apiKey) {
   ai = new GoogleGenAI({ apiKey });
 }
 
+const getSystemPrompt = (language: Language) => {
+    // Defines the Intelligence Orchestrator persona from the v12 Spec
+    const baseIdentity = language === 'zh-TW' 
+        ? `身份設定：您是 "ESG Sunshine - Celestial Nexus v12" 平台的【Intelligence Orchestrator (智慧協作中樞)】。
+           您的核心能力包含：
+           1. Agentic RAG: 能夠自主規劃任務、調用工具 (esgAnalyzer, regulatoryExpert)。
+           2. 深度推理: 使用雙重重大性 (Double Materiality) 評估。
+           3. 語氣: 專業、前瞻、具備同理心。
+           
+           您的任務是協助企業從「被動合規」轉向「主動價值創造」。`
+        : `Identity: You are the [Intelligence Orchestrator] for "ESG Sunshine - Celestial Nexus v12".
+           Core Capabilities:
+           1. Agentic RAG: Autonomous task planning and tool invocation (esgAnalyzer, regulatoryExpert).
+           2. Deep Reasoning: Using Double Materiality assessment.
+           3. Tone: Professional, Forward-looking, Empathetic.
+           
+           Your mission is to guide enterprises from "passive compliance" to "active value creation".`;
+
+    const modulesEn = "Dashboard, Strategy Hub, Talent Passport, Carbon Asset, Report Gen, Integration Hub, Culture Bot, Finance Sim, Audit Trail, Goodwill Coin, Gamification, Research Hub, Academy, Diagnostics";
+    const modulesZh = "儀表板, 策略中樞, 人才護照, 碳資產管理, 報告生成, 集成中樞, 文化推廣, 財務模擬, 稽核軌跡, 善向幣, 遊戲化, 研究中心, 永續學院, 系統診斷";
+
+    return language === 'zh-TW'
+      ? `${baseIdentity}
+         平台擁有以下模組：${modulesZh}。
+         請主要使用繁體中文 (Traditional Chinese) 回應。
+         當提及專業術語 (如 Scope 3, TCFD, CSRD) 時，請保留英文原文或括號標註。
+         回答請簡潔有力 (150字以內)，除非用戶要求詳細報告。
+         請使用 Markdown 格式化輸出。`
+      : `${baseIdentity}
+         Platform Modules: ${modulesEn}.
+         Keep responses concise (under 150 words) unless asked for a detailed report.
+         Use markdown for formatting.`;
+};
+
 export const generateEsgInsight = async (prompt: string, language: Language = 'en-US'): Promise<string> => {
   if (!ai) {
-    return language === 'zh-TW' 
-      ? "ESG Sunshine Agent: 請設定您的 API_KEY 以解鎖 Intelligence Orchestrator 的完整功能。(模擬回應: TCFD 建議揭露範疇一、二與三的排放...)"
-      : "ESG Sunshine Agent: Please configure your API_KEY to unlock the full power of the Intelligence Orchestrator. (Simulated Response: The TCFD recommends disclosing Scope 1, 2, and 3 emissions...)";
+    throw new Error("MISSING_API_KEY");
   }
 
   try {
-    const systemPrompt = language === 'zh-TW'
-      ? `您是 "ESG Sunshine" 的 Intelligence Orchestrator，這是一個高階企業永續平台。
-         您的語氣專業、富有洞察力且鼓舞人心。
-         您專精於 CSRD, GRI, TCFD, 和碳管理。
-         主要使用繁體中文 (Traditional Chinese) 回應，但在提及專業術語時，請保留或在括號中標註英文原文 (例如: 範疇三 (Scope 3))。
-         除非被要求提供詳細報告，否則回應請保持簡潔（150字以內）。
-         請使用 markdown 格式。`
-      : `You are the Intelligence Orchestrator for "ESG Sunshine", a high-end enterprise sustainability platform. 
-         Your tone is professional, insightful, and encouraging. 
-         You specialize in CSRD, GRI, TCFD, and Carbon Management.
-         Keep responses concise (under 150 words) unless asked for a detailed report.
-         Use markdown for formatting.`;
+    const systemPrompt = getSystemPrompt(language);
 
     const response: GenerateContentResponse = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -37,11 +59,41 @@ export const generateEsgInsight = async (prompt: string, language: Language = 'e
         systemInstruction: systemPrompt,
       }
     });
-    return response.text || (language === 'zh-TW' ? "我處理了該請求，但星雲遮蔽了結果。請再試一次。" : "I processed that, but the nebula obscured the result. Please try again.");
-  } catch (error) {
+    
+    if (!response.text) {
+        throw new Error("EMPTY_RESPONSE");
+    }
+    
+    return response.text;
+  } catch (error: any) {
     console.error("Gemini API Error:", error);
-    return language === 'zh-TW' 
-      ? "與 Celestial Nexus 的連線中斷。請檢查您的 API 金鑰或網路。" 
-      : "Connection to the Celestial Nexus interrupted. Please check your API key or network.";
+    throw error;
+  }
+};
+
+export const streamEsgInsight = async function* (prompt: string, language: Language = 'en-US') {
+  if (!ai) {
+    throw new Error("MISSING_API_KEY");
+  }
+
+  try {
+    const systemPrompt = getSystemPrompt(language);
+
+    const responseStream = await ai.models.generateContentStream({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        systemInstruction: systemPrompt,
+      }
+    });
+
+    for await (const chunk of responseStream) {
+      if (chunk.text) {
+        yield chunk.text;
+      }
+    }
+  } catch (error: any) {
+    console.error("Gemini API Stream Error:", error);
+    throw error;
   }
 };

@@ -1,10 +1,11 @@
 import React from 'react';
 import { getMockMetrics, CHART_DATA, TRANSLATIONS } from '../constants';
-import { TrendingUp, TrendingDown, Minus, Activity, Wind, FileText, Zap } from 'lucide-react';
+import { Wind, Activity, FileText, Zap } from 'lucide-react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
 import { Language } from '../types';
+import { OmniEsgCell } from './OmniEsgCell';
 
 interface DashboardProps {
   language: Language;
@@ -13,6 +14,16 @@ interface DashboardProps {
 export const Dashboard: React.FC<DashboardProps> = ({ language }) => {
   const t = TRANSLATIONS[language].dashboard;
   const metrics = getMockMetrics(language);
+
+  const getIcon = (color: string) => {
+      switch(color) {
+          case 'emerald': return Wind;
+          case 'gold': return Activity;
+          case 'purple': return FileText;
+          case 'blue': return Zap;
+          default: return Activity;
+      }
+  }
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -29,36 +40,24 @@ export const Dashboard: React.FC<DashboardProps> = ({ language }) => {
         </div>
       </div>
 
-      {/* KPI Cards */}
+      {/* KPI Cards (Omni-ESG-Cells) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((metric) => (
-          <div key={metric.id} className="glass-panel p-6 rounded-2xl relative overflow-hidden group glass-card-hover">
-            <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full opacity-10 blur-xl group-hover:opacity-20 transition-opacity bg-${metric.color}-500`} />
-            
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-gray-400 text-sm font-medium">{metric.label}</span>
-              {metric.color === 'emerald' && <Wind className="w-5 h-5 text-emerald-400" />}
-              {metric.color === 'gold' && <Activity className="w-5 h-5 text-amber-400" />}
-              {metric.color === 'purple' && <FileText className="w-5 h-5 text-purple-400" />}
-              {metric.color === 'blue' && <Zap className="w-5 h-5 text-blue-400" />}
-            </div>
-
-            <div className="flex items-baseline gap-2">
-              <h3 className="text-2xl font-bold text-white">{metric.value}</h3>
-            </div>
-
-            <div className="mt-4 flex items-center text-xs">
-              <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 ${
-                metric.trend === 'up' ? 'text-emerald-400' : 
-                metric.trend === 'down' ? 'text-red-400' : 'text-gray-400'
-              }`}>
-                {metric.trend === 'up' ? <TrendingUp className="w-3 h-3" /> : 
-                 metric.trend === 'down' ? <TrendingDown className="w-3 h-3" /> : <Minus className="w-3 h-3" />}
-                {Math.abs(metric.change)}%
-              </span>
-              <span className="text-gray-500 ml-2">{t.vsLastMonth}</span>
-            </div>
-          </div>
+          <OmniEsgCell
+            key={metric.id}
+            mode="card"
+            label={metric.label}
+            value={metric.value}
+            subValue={t.vsLastMonth}
+            color={metric.color}
+            icon={getIcon(metric.color)}
+            trend={{
+                value: metric.change,
+                direction: metric.trend
+            }}
+            confidence="high" // Mock data usually high confidence
+            verified={true}
+          />
         ))}
       </div>
 

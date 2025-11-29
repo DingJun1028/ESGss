@@ -1,5 +1,5 @@
 {
-  "name": "esg-sunshine---決策支持平台",
+  "name": "esg-sunshine---celestial-nexus-v12",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,7 +13,10 @@
     "lucide-react": "^0.555.0",
     "recharts": "^3.5.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "uuid": "^13.0.0",
+    "marked": "^15.0.0",
+    "html2pdf.js": "^0.10.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

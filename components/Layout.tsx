@@ -1,5 +1,8 @@
 import React from 'react';
-import { LayoutDashboard, GraduationCap, Search, Settings, Activity, Sun, Menu, Bell, Languages } from 'lucide-react';
+import { 
+  LayoutDashboard, GraduationCap, Search, Settings, Activity, Sun, Bell, Languages,
+  Target, UserCheck, Leaf, FileText, Network, Bot, Calculator, ShieldCheck, Coins, Trophy 
+} from 'lucide-react';
 import { View, Language } from '../types';
 import { TRANSLATIONS } from '../constants';
 
@@ -30,41 +33,36 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, onNavigate, languag
         
         {/* Sidebar */}
         <aside className="w-20 lg:w-64 hidden md:flex flex-col border-r border-white/5 bg-slate-900/50 backdrop-blur-xl">
-          <div className="h-20 flex items-center justify-center lg:justify-start lg:px-6 border-b border-white/5">
+          <div className="h-20 shrink-0 flex items-center justify-center lg:justify-start lg:px-6 border-b border-white/5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-celestial-emerald to-celestial-purple flex items-center justify-center shadow-lg shadow-celestial-emerald/20">
                <Sun className="w-5 h-5 text-white" />
             </div>
             <span className="ml-3 font-bold text-xl text-white hidden lg:block tracking-tight">ESG<span className="font-light text-gray-400">Sunshine</span></span>
           </div>
 
-          <nav className="flex-1 py-6 px-3 space-y-2">
-            <NavItem 
-              active={currentView === View.DASHBOARD} 
-              onClick={() => onNavigate(View.DASHBOARD)} 
-              icon={<LayoutDashboard className="w-5 h-5" />} 
-              label={t.nav.dashboard} 
-            />
-            <NavItem 
-              active={currentView === View.RESEARCH_HUB} 
-              onClick={() => onNavigate(View.RESEARCH_HUB)} 
-              icon={<Search className="w-5 h-5" />} 
-              label={t.nav.researchHub} 
-            />
-            <NavItem 
-              active={currentView === View.ACADEMY} 
-              onClick={() => onNavigate(View.ACADEMY)} 
-              icon={<GraduationCap className="w-5 h-5" />} 
-              label={t.nav.academy} 
-            />
-            <NavItem 
-              active={currentView === View.DIAGNOSTICS} 
-              onClick={() => onNavigate(View.DIAGNOSTICS)} 
-              icon={<Activity className="w-5 h-5" />} 
-              label={t.nav.diagnostics} 
-            />
+          <nav className="flex-1 overflow-y-auto py-6 px-3 space-y-1 custom-scrollbar">
+            <div className="text-[10px] uppercase text-gray-500 px-4 mb-2 hidden lg:block font-semibold tracking-wider">Core</div>
+            <NavItem active={currentView === View.DASHBOARD} onClick={() => onNavigate(View.DASHBOARD)} icon={<LayoutDashboard className="w-5 h-5" />} label={t.nav.dashboard} />
+            <NavItem active={currentView === View.RESEARCH_HUB} onClick={() => onNavigate(View.RESEARCH_HUB)} icon={<Search className="w-5 h-5" />} label={t.nav.researchHub} />
+            <NavItem active={currentView === View.ACADEMY} onClick={() => onNavigate(View.ACADEMY)} icon={<GraduationCap className="w-5 h-5" />} label={t.nav.academy} />
+            <NavItem active={currentView === View.DIAGNOSTICS} onClick={() => onNavigate(View.DIAGNOSTICS)} icon={<Activity className="w-5 h-5" />} label={t.nav.diagnostics} />
+
+            <div className="text-[10px] uppercase text-gray-500 px-4 mt-6 mb-2 hidden lg:block font-semibold tracking-wider">Management</div>
+            <NavItem active={currentView === View.STRATEGY} onClick={() => onNavigate(View.STRATEGY)} icon={<Target className="w-5 h-5" />} label={t.nav.strategy} />
+            <NavItem active={currentView === View.CARBON} onClick={() => onNavigate(View.CARBON)} icon={<Leaf className="w-5 h-5" />} label={t.nav.carbon} />
+            <NavItem active={currentView === View.TALENT} onClick={() => onNavigate(View.TALENT)} icon={<UserCheck className="w-5 h-5" />} label={t.nav.talent} />
+            <NavItem active={currentView === View.REPORT} onClick={() => onNavigate(View.REPORT)} icon={<FileText className="w-5 h-5" />} label={t.nav.report} />
+
+            <div className="text-[10px] uppercase text-gray-500 px-4 mt-6 mb-2 hidden lg:block font-semibold tracking-wider">Growth</div>
+            <NavItem active={currentView === View.INTEGRATION} onClick={() => onNavigate(View.INTEGRATION)} icon={<Network className="w-5 h-5" />} label={t.nav.integration} />
+            <NavItem active={currentView === View.CULTURE} onClick={() => onNavigate(View.CULTURE)} icon={<Bot className="w-5 h-5" />} label={t.nav.culture} />
+            <NavItem active={currentView === View.FINANCE} onClick={() => onNavigate(View.FINANCE)} icon={<Calculator className="w-5 h-5" />} label={t.nav.finance} />
+            <NavItem active={currentView === View.AUDIT} onClick={() => onNavigate(View.AUDIT)} icon={<ShieldCheck className="w-5 h-5" />} label={t.nav.audit} />
+            <NavItem active={currentView === View.GOODWILL} onClick={() => onNavigate(View.GOODWILL)} icon={<Coins className="w-5 h-5" />} label={t.nav.goodwill} />
+            <NavItem active={currentView === View.GAMIFICATION} onClick={() => onNavigate(View.GAMIFICATION)} icon={<Trophy className="w-5 h-5" />} label={t.nav.gamification} />
           </nav>
 
-          <div className="p-4 border-t border-white/5">
+          <div className="shrink-0 p-4 border-t border-white/5">
             <NavItem 
               active={currentView === View.SETTINGS} 
               onClick={() => onNavigate(View.SETTINGS)} 
@@ -77,7 +75,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, onNavigate, languag
         {/* Content Area */}
         <div className="flex-1 flex flex-col h-screen overflow-hidden">
           {/* Top Bar */}
-          <header className="h-20 border-b border-white/5 flex items-center justify-between px-8 bg-slate-900/30 backdrop-blur-sm">
+          <header className="h-20 border-b border-white/5 flex items-center justify-between px-8 bg-slate-900/30 backdrop-blur-sm shrink-0">
             <div className="md:hidden flex items-center gap-2">
                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-celestial-emerald to-celestial-purple flex items-center justify-center">
                     <Sun className="w-5 h-5 text-white" />
@@ -125,6 +123,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, onNavigate, languag
         <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-2 z-40">
             <button onClick={() => onNavigate(View.DASHBOARD)} className={`p-2 rounded-lg ${currentView === View.DASHBOARD ? 'text-celestial-emerald' : 'text-gray-500'}`}><LayoutDashboard className="w-6 h-6"/></button>
             <button onClick={() => onNavigate(View.RESEARCH_HUB)} className={`p-2 rounded-lg ${currentView === View.RESEARCH_HUB ? 'text-celestial-emerald' : 'text-gray-500'}`}><Search className="w-6 h-6"/></button>
+            <button onClick={() => onNavigate(View.CARBON)} className={`p-2 rounded-lg ${currentView === View.CARBON ? 'text-celestial-emerald' : 'text-gray-500'}`}><Leaf className="w-6 h-6"/></button>
             <button onClick={() => onNavigate(View.ACADEMY)} className={`p-2 rounded-lg ${currentView === View.ACADEMY ? 'text-celestial-emerald' : 'text-gray-500'}`}><GraduationCap className="w-6 h-6"/></button>
         </div>
 
@@ -146,6 +145,6 @@ const NavItem = ({ active, onClick, icon, label }: { active: boolean, onClick: (
     <span className={`${active ? 'text-celestial-emerald' : 'text-gray-400 group-hover:text-white'}`}>
       {icon}
     </span>
-    <span className="hidden lg:block text-sm font-medium">{label}</span>
+    <span className="hidden lg:block text-sm font-medium text-left truncate">{label}</span>
   </button>
 );
